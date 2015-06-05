@@ -1,0 +1,58 @@
+// Classifies the unlabeled instances of the given dataset,
+// using the informed classifiers and a specific social_choice_function
+function social_training(dataset, classifiers, social_choice_function)
+{
+    // Trains the classifiers using the labeled data
+    for (classifier in classifiers)
+    {
+        classifier.train(dataset.labeled)
+    }
+
+    // Classifies the unlabeled instances according to the dataset properties
+    if (dataset.number_of_classes > 2)
+    {
+        return classify_multy_class(dataset, classifiers, social_choice_function)
+    }
+    else // binary classification
+    {
+        return classify_binary(dataset, classifiers, social_choice_function)
+    }
+}
+
+// Classification for binary datasets
+function classify_binary(dataset, classifiers, social_choice_function)
+{
+    // Dictionary to store the rankings of each classifier
+    rankings = Dictionary<Classifier, Ranking>()
+    
+    for (classifier in classifiers)
+    {
+        rankings[classifier] = classifier.define_ranking(dataset.unlabeled)
+    }
+    
+    // Applies the social choice function with the given preference rankings
+    return social_choice_function.calculate(rankings)
+}
+
+// Classification for multi-class datasets
+function classify_multy_class(dataset, classifiers, social_choice_function)
+{
+    // Dictionary to store the results of the classification
+    results = dictionary<Instance, Classification>()
+    
+    for (instance in dataset.unlabeled)
+    {
+        // Dictionary to store the rankings of each classifier
+        rankings = Dictionary<Classifier, Ranking>()
+    
+        for (classifier in classifiers)
+        {
+            rankings[classifier] = classifier.define_class_ranking(instance)
+        }
+        
+        // Applies the social choice function with the given preference rankings
+        results[instance] = social_choice_function.calculate(rankings)
+    }
+    
+    return results
+}   
