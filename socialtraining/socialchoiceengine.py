@@ -23,8 +23,6 @@ class SocialChoiceEngine:
 
     def apply_social_choice_function(self, rankings):
 
-        print('\nApplying Social Choice Function: ', self._method)
-
         self._extract_votes_from_rankings(rankings)
 
         return self._engine.get_winner()[0]

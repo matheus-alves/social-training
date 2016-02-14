@@ -7,6 +7,7 @@ from sklearn.lda import LDA
 from sklearn.qda import QDA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 from classifier import Classifier
 import socialtraining
@@ -36,3 +37,7 @@ class ClassifierFactory:
                 socialtraining.ClassifierTypes.gradient_boosting:
             return Classifier('Gradient Boosting',
                                GradientBoostingClassifier())
+        elif classifier_type == \
+                socialtraining.ClassifierTypes.decision_tree:
+            return Classifier('Decision Tree',
+                               DecisionTreeClassifier())

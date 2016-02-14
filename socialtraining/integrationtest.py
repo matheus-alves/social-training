@@ -1,10 +1,11 @@
 import socialtraining
+import crossvalidation
 from dataset import *
 
 # Constants
 UNLABELED_RATE = UnlabeledDataRates.eighty
 # TODO add these as parameter options
-from datasetloaders.diabetes import *
+from datasetloaders.bupa import *
 
 # Creates tha data set abstraction class
 data_set = DataSet(instances, labels, UNLABELED_RATE)
@@ -33,7 +34,21 @@ social_training.set_classifiers([
     socialtraining.ClassifierTypes.logistic_regression,
     socialtraining.ClassifierTypes.k_nearest_neighbors,
     socialtraining.ClassifierTypes.gaussian_naive_bayes,
-    socialtraining.ClassifierTypes.quadratic_discriminant_analysis
+    socialtraining.ClassifierTypes.quadratic_discriminant_analysis,
+    socialtraining.ClassifierTypes.decision_tree
     ])
 
-social_training.apply_social_training(data_set)
+print ('\nApplying Social Training \n')
+print ('Social Choice Function: ', 'TODO')
+
+metrics = list()
+metrics.append(social_training.apply_social_training(data_set))
+
+for i in range (1, crossvalidation.NUMBER_OF_FOLDS) :
+    fold_data = crossvalidation.generate_fold(instances, labels, i)
+    data_set = DataSet(fold_data[0], fold_data[1], UNLABELED_RATE)
+    metrics.append(social_training.apply_social_training(data_set))
+
+crossvalidation.generate_cv_pre_post_scf_unlabeled_metrics(metrics)
+crossvalidation.generate_cv_pre_scf_metrics(metrics)
+crossvalidation.generate_cv_post_scf_metrics(metrics)

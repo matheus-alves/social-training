@@ -32,6 +32,7 @@ class ClassifierTypes(Enum):
     gaussian_naive_bayes = 4
     bernoulli_naive_bayes = 5
     gradient_boosting = 6
+    decision_tree = 7
 
 class SocialChoiceFunctionTypes(Enum):
     """
@@ -144,18 +145,18 @@ class SocialTraining:
 
     def _classify_binary(self, data_set):
 
-        self._generate_pre_scf_unlabeled_metrics(data_set)
+        pre_scf_unlabeled_metrics = self._generate_pre_scf_unlabeled_metrics(
+            data_set)
         scf_engine = SocialChoiceEngine(self._social_choice_function)
 
         rankings = self._generate_rankings(data_set)
         scf_results = scf_engine.apply_social_choice_function(rankings)
         binary_labels = self._define_binary_labels(scf_results)
 
-        print('\nPost-SCF unlabeled metrics:\n')
-        print('{0:0.2f}'.format(metrics.accuracy_score(
-            data_set.unlabeled_data.labels, binary_labels)))
+        post_scf_unlabeled_metrics = metrics.accuracy_score(
+            data_set.unlabeled_data.labels, binary_labels)
 
-        self._generate_pre_scf_metrics(data_set)
+        pre_scf_metrics = self._generate_pre_scf_metrics(data_set)
 
         data_set.labeled_data.instances = data_set.labeled_data.instances + \
                                           data_set.unlabeled_data.instances
@@ -163,7 +164,12 @@ class SocialTraining:
                                        binary_labels
 
         self._train_classifiers(data_set)
-        self._generate_post_scf_metrics(data_set)
+        post_scf_metrics = self._generate_post_scf_metrics(data_set)
+
+        fold_metrics = (pre_scf_unlabeled_metrics, post_scf_unlabeled_metrics,
+                        pre_scf_metrics, post_scf_metrics)
+
+        return fold_metrics
 
     def _define_binary_labels(self, scf_results):
         positive_threshold = len(scf_results) * self._class_threshold
@@ -196,9 +202,8 @@ class SocialTraining:
 
     def _generate_pre_scf_unlabeled_metrics(self, data_set):
 
-        print('\nPre-SCF unlabeled metrics:\n')
-
         average = 0.0
+        classifiers_results = dict()
 
         for classifier_type in self._classifier_types:
             classifier = self._classifiers[classifier_type]
@@ -207,17 +212,17 @@ class SocialTraining:
             accuracy = metrics.accuracy_score(data_set.unlabeled_data.labels,
                                               predicted)
 
-            print(str(classifier), '= {0:0.2f}'.format(accuracy))
+            classifiers_results[str(classifier)] = accuracy
             average += accuracy
 
-        print('\nAverage', '= {0:0.2f}'.format(
-            average / len(self._classifier_types)))
+        pre_scf_unlabeled_metrics = (classifiers_results, average)
+
+        return pre_scf_unlabeled_metrics
 
     def _generate_pre_scf_metrics(self, data_set):
 
-        print('\nPre-SCF classification:\n')
-
         average = 0.0
+        classifiers_results = dict()
 
         for classifier_type in self._classifier_types:
             classifier = self._classifiers[classifier_type]
@@ -226,18 +231,18 @@ class SocialTraining:
             accuracy = metrics.accuracy_score(data_set.test_data.labels,
                                               predicted)
 
-            print(str(classifier), '= {0:0.2f}'.format(accuracy))
+            classifiers_results[str(classifier)] = accuracy
             average += accuracy
 
-        print('\nAverage', '= {0:0.2f}'.format(
-            average / len(self._classifier_types)))
+        pre_scf_metrics = (classifiers_results, average)
+
+        return pre_scf_metrics
 
     def _generate_post_scf_metrics(self, data_set):
 
-        print('\nPost-SCF classification:\n')
-
         average = 0.0
         average_error = 0.0
+        classifiers_results = dict()
 
         for classifier_type in self._classifier_types:
             classifier = self._classifiers[classifier_type]
@@ -255,11 +260,9 @@ class SocialTraining:
             accuracy = metrics.accuracy_score(data_set.test_data.labels,
                                               predicted)
 
-            print(str(classifier), '= {0:0.2f}'.format(accuracy))
+            classifiers_results[str(classifier)] = accuracy
             average += accuracy
 
-        print('\nAverage', '= {0:0.2f}'.format(
-            average / len(self._classifier_types)))
+        post_scf_metrics = (classifiers_results, average, average_error)
 
-        print('\nSocial Training Average Error', '= {0:0.3f}'.format(
-            average_error / len(self._classifier_types)))
+        return post_scf_metrics
