@@ -1,11 +1,15 @@
+import time
+
+start_time = time.clock()
+
 import socialtraining
 import crossvalidation
 from dataset import *
 
 # Constants
-UNLABELED_RATE = UnlabeledDataRates.eighty
+UNLABELED_RATE = UnlabeledDataRates.twenty
 # TODO add these as parameter options
-from datasetloaders.bupa import *
+from datasetloaders.wdbc import *
 
 # Creates tha data set abstraction class
 data_set = DataSet(instances, labels, UNLABELED_RATE)
@@ -16,6 +20,8 @@ print('Negative class ratio:', data_set.class_ratio[NEGATIVE_CLASS_LABEL])
 print('\nTest data size:', len(data_set.test_data.instances))
 print('Train data size:', len(data_set.unlabeled_data.instances) +
       len(data_set.labeled_data.instances))
+
+print('\nUnlabeled data rate:', UNLABELED_RATE)
 
 print('\nLabeled data size:', len(data_set.labeled_data.instances))
 print('Unlabeled data size:', len(data_set.unlabeled_data.instances))
@@ -39,7 +45,7 @@ social_training.set_classifiers([
     ])
 
 print ('\nApplying Social Training \n')
-print ('Social Choice Function: ', 'TODO')
+print ('Social Choice Function: ', 'Borda Count')
 
 metrics = list()
 metrics.append(social_training.apply_social_training(data_set))
@@ -52,3 +58,5 @@ for i in range (1, crossvalidation.NUMBER_OF_FOLDS) :
 crossvalidation.generate_cv_pre_post_scf_unlabeled_metrics(metrics)
 crossvalidation.generate_cv_pre_scf_metrics(metrics)
 crossvalidation.generate_cv_post_scf_metrics(metrics)
+
+print ('\nExecution Time: {:.3} seconds'.format(time.clock() - start_time))
