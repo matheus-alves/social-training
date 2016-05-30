@@ -2,12 +2,12 @@ import itertools
 
 from zope.interface import implements
 
-from ballotbox import (
+from ballotbox.criteria import (
     ICondorcetCriterion, ICondorcetLoserCriterion,
     IIndependenceOfClonesCriterion, IMajorityCriterion, IMonotonicityCriterion,
     ISmithCriterion)
-from ballotbox import IVotingMethod
-from ballotbox import base, borda
+from ballotbox.iballot import IVotingMethod
+from . import base, borda
 
 
 class CopelandVoting(object):
@@ -34,12 +34,12 @@ class CopelandVoting(object):
                 data.setdefault(candidate, {"wins": 0, "losses": 0})
             [(votes, winner)] = box.get_winner()
             loser = (candidates - set(winner)).pop()
-            data[winner]["wins"] += 1
-            data[loser]["losses"] += 1
+            data[int(winner)]["wins"] += 1
+            data[int(loser)]["losses"] += 1
         results = sorted([
-            (stats['wins'] - stats['losses'], candidate)
+            (stats['wins'] - stats['losses'], str(candidate))
             for candidate, stats in data.items()], reverse=True)
-        return [results[0]]
+        return [results] # TODO document changes here
 
 
 class KemenyYoungVoting(base.PairWiseBase):

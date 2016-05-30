@@ -1,15 +1,16 @@
 import time
 
-start_time = time.clock()
-
 import socialtraining
 import crossvalidation
 from dataset import *
 
 # Constants
-UNLABELED_RATE = UnlabeledDataRates.twenty
+UNLABELED_RATE = UnlabeledDataRates.eighty
+SCF = socialtraining.SocialChoiceFunctionTypes.copeland
 # TODO add these as parameter options
-from datasetloaders.wdbc import *
+from datasetloaders.diabetes import *
+
+start_time = time.clock()
 
 # Creates tha data set abstraction class
 data_set = DataSet(instances, labels, UNLABELED_RATE)
@@ -44,8 +45,11 @@ social_training.set_classifiers([
     socialtraining.ClassifierTypes.decision_tree
     ])
 
+social_training.set_social_choice_function(SCF)
+
 print ('\nApplying Social Training \n')
-print ('Social Choice Function: ', 'Borda Count')
+print ('Social Choice Function: ',
+       social_training.get_social_choice_function())
 
 metrics = list()
 metrics.append(social_training.apply_social_training(data_set))

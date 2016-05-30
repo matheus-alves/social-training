@@ -39,7 +39,9 @@ class SocialChoiceFunctionTypes(Enum):
     Enum that defines which social choice functions the framework supports.
     """
     borda = 0
-    borda_elim = 1
+    plurality = 1
+    kemeny = 2
+    copeland = 3
 
 class SocialTraining:
     """
@@ -93,6 +95,10 @@ class SocialTraining:
         """
 
         self._social_choice_function = social_choice_function
+
+    def get_social_choice_function(self):
+
+        return self._social_choice_function
 
     def set_binary_classification_parameters(self,
                                  positive_class_label=_POSITIVE_CLASS_LABEL,

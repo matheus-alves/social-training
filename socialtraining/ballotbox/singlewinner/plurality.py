@@ -30,7 +30,7 @@ in a particular constituency using bloc voting.
 """
 from zope.interface import implements
 
-from ballotbox import IVotingMethod
+from ballotbox.iballot import IVotingMethod
 
 
 class FirstPastPostVoting(object):
@@ -62,8 +62,11 @@ class FirstPastPostVoting(object):
     def get_winner(self, ballotbox, position_count=1):
         """
         """
-        results = sorted([(count, name) for name, count in ballotbox.items()],
-                         reverse=True)
+
+        results = sorted([(count, str(name)) for name, count in
+                          ballotbox.items()],
+                         reverse=True) # TODO document this change
+
         return results[0:position_count]
 
 
