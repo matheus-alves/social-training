@@ -3,7 +3,6 @@ __author__ = 'Matheus Alves'
 from ballotbox.ballot import BallotBox
 from ballotbox.singlewinner.preferential.borda import BordaVoting
 from ballotbox.singlewinner.plurality import FirstPastPostVoting
-from ballotbox.singlewinner.preferential.condorcet import KemenyYoungVoting
 from ballotbox.singlewinner.preferential.condorcet import CopelandVoting
 
 import socialtraining
@@ -67,9 +66,6 @@ class _SocialChoiceFactory:
         if social_choice_function == \
                 socialtraining.SocialChoiceFunctionTypes.borda:
             return (Borda(), 'Borda Count')
-        elif social_choice_function == \
-                socialtraining.SocialChoiceFunctionTypes.plurality:
-            return (Plurality(), 'Plurality')
         elif social_choice_function == \
                 socialtraining.SocialChoiceFunctionTypes.copeland:
             return (Copeland(), 'Copeland')

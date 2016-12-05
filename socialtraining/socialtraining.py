@@ -39,9 +39,7 @@ class SocialChoiceFunctionTypes(Enum):
     Enum that defines which social choice functions the framework supports.
     """
     borda = 0
-    plurality = 1
-    kemeny = 2
-    copeland = 3
+    copeland = 1
 
 class SocialTraining:
     """
@@ -266,7 +264,23 @@ class SocialTraining:
             accuracy = metrics.accuracy_score(data_set.test_data.labels,
                                               predicted)
 
-            classifiers_results[str(classifier)] = accuracy
+            f_score = metrics.f1_score(data_set.test_data.labels,
+                                              predicted)
+
+            precision = metrics.precision_score(data_set.test_data.labels,
+                                              predicted)
+
+            recall = metrics.recall_score(data_set.test_data.labels,
+                                              predicted)
+
+            classifier_metrics = dict()
+
+            classifier_metrics['accuracy'] = accuracy
+            classifier_metrics['f-score'] = f_score
+            classifier_metrics['precision'] = precision
+            classifier_metrics['recall'] = recall
+
+            classifiers_results[str(classifier)] = classifier_metrics
             average += accuracy
 
         post_scf_metrics = (classifiers_results, average, average_error)

@@ -6,9 +6,9 @@ from dataset import *
 
 # Constants
 UNLABELED_RATE = UnlabeledDataRates.eighty
-SCF = socialtraining.SocialChoiceFunctionTypes.copeland
+SCF = socialtraining.SocialChoiceFunctionTypes.borda
 # TODO add these as parameter options
-from datasetloaders.diabetes import *
+from datasetloaders.adult import *
 
 start_time = time.clock()
 
