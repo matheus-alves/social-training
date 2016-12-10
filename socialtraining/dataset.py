@@ -18,6 +18,7 @@ class UnlabeledDataRates(Enum):
     sixty = 1
     forty = 2
     twenty = 3
+    ninetyfive = 4
 
 class DataSet:
     """
@@ -84,6 +85,8 @@ class DataSet:
             return 0.4
         elif unlabeled_data_rate == UnlabeledDataRates.twenty:
             return 0.2
+        elif unlabeled_data_rate == UnlabeledDataRates.ninetyfive:
+            return 0.95
 
     def _generate_groups(self, instances, labels, unlabeled_data_rate,
                          test_group_rate):

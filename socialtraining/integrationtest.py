@@ -5,8 +5,8 @@ import crossvalidation
 from dataset import *
 
 # Constants
-UNLABELED_RATE = UnlabeledDataRates.eighty
-SCF = socialtraining.SocialChoiceFunctionTypes.borda
+UNLABELED_RATE = UnlabeledDataRates.ninetyfive
+SCF = socialtraining.SocialChoiceFunctionTypes.copeland
 # TODO add these as parameter options
 from datasetloaders.adult import *
 
