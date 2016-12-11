@@ -1,9 +1,9 @@
-NUM_OF_ATTRIBUTES = 29
+NUM_OF_ATTRIBUTES = 55
 
 CLASS_THRESHOLD = 0.06
 
-POSITIVE_CLASS_LABEL = b'sick'
-NEGATIVE_CLASS_LABEL = b'negative'
+POSITIVE_CLASS_LABEL = 1.
+NEGATIVE_CLASS_LABEL = 0.
 
 print('Loading Data Set: ' + "sick")
 
@@ -48,6 +48,14 @@ CWD = os.getcwd()
 
 from scipy.io.arff import loadarff
 raw_data = loadarff(open(CWD + '/datasets/sick.arff', 'r'))[0]
+
+import pandas as pd
+df = pd.DataFrame(raw_data)
+
+raw_data = pd.get_dummies(df, dummy_na=True).values
+
+print (raw_data[0])
+print (len(raw_data[0]))
 
 # Creates the instances and labels sets
 instances = list()

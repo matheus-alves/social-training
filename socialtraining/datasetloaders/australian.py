@@ -1,9 +1,9 @@
-NUM_OF_ATTRIBUTES = 15
+NUM_OF_ATTRIBUTES = 62
 
 CLASS_THRESHOLD = 0.55
 
-POSITIVE_CLASS_LABEL = b'-'
-NEGATIVE_CLASS_LABEL = b'+'
+POSITIVE_CLASS_LABEL = 0.
+NEGATIVE_CLASS_LABEL = 1.
 
 print('Loading Data Set: ' + "australian")
 
@@ -38,6 +38,14 @@ CWD = os.getcwd()
 from scipy.io.arff import loadarff
 raw_data = loadarff(open(CWD + '/datasets/australian.arff', 'r'))[0]
 
+import pandas as pd
+df = pd.DataFrame(raw_data)
+
+raw_data = pd.get_dummies(df, dummy_na=True).values
+
+print (raw_data[0])
+print (len(raw_data[0]))
+
 # Creates the instances and labels sets
 instances = list()
 labels = list()
@@ -48,28 +56,3 @@ for i in range(0, len(raw_data)):
 
     instances.append(instance)
     labels.append(raw_data[i][NUM_OF_ATTRIBUTES])
-
-from sklearn.feature_extraction import DictVectorizer
-Dvec = DictVectorizer()
-
-Dvec.fit_transform(instances).toarray()
-
-# from sklearn.preprocessing import OneHotEncoder
-#
-# enc = OneHotEncoder()
-# enc.fit(instances)
-# OneHotEncoder(categorical_features='all', dtype='string',
-#        handle_unknown='error', n_values='auto', sparse=True)
-# enc.transform(instances).toarray()
-
-# instances = np.array(instances,
-#                      dtype='V, f, f, V, V, V, '
-#                            'V, '
-#                            'f, V, V, f, V, V, f, f')
-
-
-# dtype=[('A1', '>b'), ('A2', '>f4'), ('A3', '>f4'),
-#                             ('A4', '>b'), ('A5', '>b'), ('A6', '>b'),
-#                             ('A7', '>b'), ('A8', '>f4'), ('A9', '>b'),
-#                             ('A10', '>b'), ('A11', '>f4'), ('A12', '>b'),
-#                             ('A13', '>b'), ('A14', '>f4'), ('A15', '>f4')])

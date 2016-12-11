@@ -1,9 +1,9 @@
-NUM_OF_ATTRIBUTES = 23
+NUM_OF_ATTRIBUTES = 93
 
 CLASS_THRESHOLD = 0.63
 
-POSITIVE_CLASS_LABEL = "b'yes'"
-NEGATIVE_CLASS_LABEL = "b'no'"
+POSITIVE_CLASS_LABEL = 0.
+NEGATIVE_CLASS_LABEL = 1.
 
 print('Loading Data Set: ' + "colic")
 
@@ -42,16 +42,24 @@ CWD = os.getcwd()
 from scipy.io.arff import loadarff
 raw_data = loadarff(open(CWD + '/datasets/colic.arff', 'r'))[0]
 
+import pandas as pd
+df = pd.DataFrame(raw_data)
+
+raw_data = pd.get_dummies(df, dummy_na=True).values
+
+print (raw_data)
+print (len(raw_data[0]))
+
 # Creates the instances and labels sets
 instances = list()
 labels = list()
 for i in range(0, len(raw_data)):
     instance = list()
-    for j in range(1, NUM_OF_ATTRIBUTES):
+    for j in range(0, NUM_OF_ATTRIBUTES):
         instance.append(raw_data[i][j])
 
     instances.append(instance)
-    labels.append(str(raw_data[i][0]))
+    labels.append(raw_data[i][NUM_OF_ATTRIBUTES])
 
 # Loads the CSV file as a numpy matrix
 #raw_data = np.genfromtxt(CWD + '/datasets/colic.txt', delimiter=" ")

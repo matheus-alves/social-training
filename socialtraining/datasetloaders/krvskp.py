@@ -1,9 +1,9 @@
-NUM_OF_ATTRIBUTES = 36
+NUM_OF_ATTRIBUTES = 74
 
 CLASS_THRESHOLD = 0.52
 
-POSITIVE_CLASS_LABEL = b"'won'"
-NEGATIVE_CLASS_LABEL = b"'nowin'"
+POSITIVE_CLASS_LABEL = 1.
+NEGATIVE_CLASS_LABEL = 0.
 
 print('Loading Data Set: ' + "kr-vs-kp")
 
@@ -56,6 +56,14 @@ CWD = os.getcwd()
 from scipy.io.arff import loadarff
 raw_data = loadarff(open(CWD + '/datasets/kr-vs-kp.arff', 'r'))[0]
 
+import pandas as pd
+df = pd.DataFrame(raw_data)
+
+raw_data = pd.get_dummies(df).values
+
+# print (raw_data[0])
+# print (len(raw_data[0]))
+
 # Creates the instances and labels sets
 instances = list()
 labels = list()
@@ -66,5 +74,3 @@ for i in range(0, len(raw_data)):
 
     instances.append(instance)
     labels.append(raw_data[i][NUM_OF_ATTRIBUTES])
-
-print (labels)

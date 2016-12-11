@@ -1,9 +1,9 @@
-NUM_OF_ATTRIBUTES = 20
+NUM_OF_ATTRIBUTES = 62
 
 CLASS_THRESHOLD = 0.70
 
-POSITIVE_CLASS_LABEL = b'good'
-NEGATIVE_CLASS_LABEL = b'bad'
+POSITIVE_CLASS_LABEL = 1.
+NEGATIVE_CLASS_LABEL = 0.
 
 print('Loading Data Set: ' + "german")
 
@@ -42,6 +42,14 @@ CWD = os.getcwd()
 
 from scipy.io.arff import loadarff
 raw_data = loadarff(open(CWD + '/datasets/german.arff', 'r'))[0]
+
+import pandas as pd
+df = pd.DataFrame(raw_data)
+
+raw_data = pd.get_dummies(df).values
+
+# print (raw_data[0])
+# print (len(raw_data[0]))
 
 # Creates the instances and labels sets
 instances = list()

@@ -5,10 +5,10 @@ import crossvalidation
 from dataset import *
 
 # Constants
-UNLABELED_RATE = UnlabeledDataRates.ninetyfive
+UNLABELED_RATE = UnlabeledDataRates.twenty
 SCF = socialtraining.SocialChoiceFunctionTypes.copeland
 # TODO add these as parameter options
-from datasetloaders.adult import *
+from datasetloaders.tictactoe import *
 
 start_time = time.clock()
 
